@@ -350,14 +350,21 @@ const Discover: React.FC = () => {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
               {pagedResults.map(item => {
+                const isAnime = (item.media_type || mediaType) === 'anime';
                 const isMovie = (item.media_type || mediaType) === 'movie';
-                const title = isMovie ? (item as Movie).title : (item as TVShow).name;
-                const date = isMovie ? (item as Movie).release_date : (item as TVShow).first_air_date;
-                const posterUrl = item.poster_path ? tmdb.getImageUrl(item.poster_path) : 'https://via.placeholder.com/300x450?text=No+Image';
+                const title = isAnime ? (item as any).title || (item as any).name : 
+                             isMovie ? (item as Movie).title : (item as TVShow).name;
+                const date = isAnime ? (item as any).release_date || (item as any).first_air_date :
+                            isMovie ? (item as Movie).release_date : (item as TVShow).first_air_date;
+                const posterUrl = isAnime ? item.poster_path : 
+                                 item.poster_path ? tmdb.getImageUrl(item.poster_path) : 'https://via.placeholder.com/300x450?text=No+Image';
+                const linkUrl = isAnime ? `/anime/${item.id}` : 
+                               isMovie ? `/movie/${item.id}` : `/tv/${item.id}`;
+                
                 return (
                   <Link
                     key={item.id}
-                    to={`/${isMovie ? 'movie' : 'tv'}/${item.id}`}
+                    to={linkUrl}
                     className="group bg-white/80 dark:bg-gray-800/80 rounded-xl overflow-hidden shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                   >
                     <div className="aspect-[2/3] overflow-hidden">
@@ -368,7 +375,11 @@ const Discover: React.FC = () => {
                       />
                     </div>
                     <div className="p-3">
-                      <h3 className="text-sm font-semibold text-gray-800 dark:text-white line-clamp-2 group-hover:text-pink-600 dark:group-hover:text-purple-400">
+                      <h3 className={`text-sm font-semibold text-gray-800 dark:text-white line-clamp-2 transition-colors ${
+                        isAnime ? 'group-hover:text-orange-600 dark:group-hover:text-orange-400' :
+                        isMovie ? 'group-hover:text-pink-600 dark:group-hover:text-pink-400' :
+                        'group-hover:text-purple-600 dark:group-hover:text-purple-400'
+                      }`}>
                         {title}
                       </h3>
                       <div className="flex justify-between mt-1 text-xs text-gray-500 dark:text-gray-400">

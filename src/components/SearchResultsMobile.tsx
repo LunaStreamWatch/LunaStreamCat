@@ -81,7 +81,7 @@ const SearchResultsMobile: React.FC<MobileSearchResultsProps> = ({
               >
                 {item.poster_path ? (
                   <img
-                    src={`https://image.tmdb.org/t/p/w154${item.poster_path}`}
+                    src={isAnime(item) ? item.poster_path : `https://image.tmdb.org/t/p/w154${item.poster_path}`}
                     alt={getTitle(item)}
                     className="w-24 h-36 object-cover rounded-md flex-shrink-0"
                     loading="lazy"
@@ -113,7 +113,7 @@ const SearchResultsMobile: React.FC<MobileSearchResultsProps> = ({
 
                     <span className="flex items-center space-x-1 uppercase">
                       <Film className="w-4 h-4" />
-                      <span>{item.media_type}</span>
+                      <span>{isAnime(item) ? 'ANIME' : item.media_type}</span>
                     </span>
                   </div>
 

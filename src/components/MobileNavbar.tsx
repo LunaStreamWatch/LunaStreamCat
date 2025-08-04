@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Menu, X, Home, Search, Compass, Archive } from "lucide-react"
+import { Menu, X, Home, Search, Compass, Archive, Radio } from "lucide-react"
 import { translations, languages } from "../data/i18n"
 import { useLanguage } from "./LanguageContext"
 
@@ -15,6 +15,7 @@ const MobileNavbar: React.FC = () => {
     { path: "/", label: t.nav_home, icon: Home },
     { path: "/search", label: t.nav_search, icon: Search },
     { path: "/discover", label: t.nav_discover, icon: Compass },
+    { path: "/live-tv", label: t.nav_live_tv, icon: Radio },
     { path: "/vault", label: t.nav_vault, icon: Archive },
   ]
 
@@ -60,28 +61,25 @@ const MobileNavbar: React.FC = () => {
             </Link>
           ))}
 
-          {/* Language Selector in single-row table */}
-          <div className="overflow-x-auto mt-2">
-            <table className="w-full table-auto text-center">
-              <tbody>
-                <tr>
-                  {languages.map(({ shortname }) => (
-                    <td
-                      key={shortname}
-                      className={`cursor-pointer px-3 py-1 select-none
-                        ${
-                          language === shortname
-                            ? "text-pink-600 font-semibold border-b-2 border-pink-600"
-                            : "text-pink-600 border-b-2 border-dotted border-pink-600 hover:text-pink-800"
-                        }`}
-                      onClick={() => handleLanguageChange(shortname)}
-                    >
-                      {shortname.toUpperCase()}
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
+          {/* Language Selector */}
+          <div className="mt-4 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Language</p>
+            <div className="flex flex-wrap gap-2">
+              {languages.map(({ name, shortname, flag }) => (
+                <button
+                  key={shortname}
+                  onClick={() => handleLanguageChange(shortname)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    language === shortname
+                      ? "bg-pink-500 text-white"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-pink-100 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  <span className="text-base">{flag}</span>
+                  <span>{name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

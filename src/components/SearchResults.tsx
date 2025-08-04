@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Film, Star, Calendar } from 'lucide-react';
 import { tmdb } from '../services/tmdb';
+import { anilistService } from '../services/anilist';
 import Fuse from 'fuse.js';
 import { Movie, TVShow } from '../types';
 import GlobalNavbar from './GlobalNavbar';
@@ -13,7 +14,7 @@ import { languages, translations } from '../data/i18n';
 
 import { useLanguage } from "./LanguageContext";
 
-type MediaItem = (Movie | TVShow) & { media_type: 'movie' | 'tv'; popularity: number };
+type MediaItem = (Movie | TVShow) & { media_type: 'movie' | 'tv' | 'anime'; popularity: number };
 
 const fuseOptions: Fuse.IFuseOptions<MediaItem> = {
   keys: [
@@ -354,12 +355,16 @@ const SearchResults: React.FC = () => {
                   {item.poster_path ? (
                     <img
                       loading="lazy"
-                      src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
+                      src={isAnime(item) ? item.poster_path : `https://image.tmdb.org/t/p/w342${item.poster_path}`}
                       alt={getTitle(item)}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 text-xs uppercase font-semibold">
+                    <div className={`flex items-center justify-center w-full h-full text-xs uppercase font-semibold ${
+                      isAnime(item) 
+                        ? 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300'
+                        : 'bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300'
+                    }`}>
                       {item.media_type === 'movie' ? 'No Poster' : 'No Poster'}
                     </div>
                   )}
@@ -379,7 +384,7 @@ const SearchResults: React.FC = () => {
                     </span>
                     <span className="flex items-center">
                       <Film className="w-3.5 h-3.5 mr-1" />
-                      {item.media_type.toUpperCase()}
+                      {isAnime(item) ? 'ANIME' : item.media_type.toUpperCase()}
                     </span>
                   </div>
                 </div>

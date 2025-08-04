@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Calendar, Clock, Users, Zap, X, ChevronDown } from 'lucide-react';
+import { Play, Calendar, Clock, Users, Radio, X, ChevronDown, Tv } from 'lucide-react';
 import { liveTVService, Match, Stream, Sport } from '../services/liveTV';
 import GlobalNavbar from './GlobalNavbar';
 import { useLanguage } from './LanguageContext';
@@ -85,6 +85,7 @@ const LiveTV: React.FC = () => {
         }
       } catch (error) {
         console.error('Failed to load streams:', error);
+        setError('Failed to load streams for this match');
       }
     }
   };
@@ -100,6 +101,7 @@ const LiveTV: React.FC = () => {
     setSelectedMatch(null);
     setSelectedStream(null);
     setStreams([]);
+    setError(null);
   };
 
   if (isPlaying && selectedStream) {
@@ -167,7 +169,7 @@ const LiveTV: React.FC = () => {
           {/* Tab Filter */}
           <div className="flex bg-white/95 dark:bg-gray-800/95 rounded-xl border border-pink-200/50 dark:border-gray-600/30 p-1">
             {[
-              { id: 'live', label: t.content_live, icon: Zap },
+              { id: 'live', label: t.content_live, icon: Radio },
               { id: 'today', label: t.content_today, icon: Calendar },
               { id: 'popular', label: 'Popular', icon: Users },
             ].map((tab) => {
@@ -194,7 +196,7 @@ const LiveTV: React.FC = () => {
         {loading && (
           <div className="flex items-center justify-center py-20">
             <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full animate-spin flex items-center justify-center shadow-lg">
-              <Zap className="w-6 h-6 text-white" />
+              <Radio className="w-6 h-6 text-white" />
             </div>
           </div>
         )}
@@ -203,6 +205,12 @@ const LiveTV: React.FC = () => {
         {error && (
           <div className="text-center py-20">
             <p className="text-red-500 text-lg">{error}</p>
+            <button
+              onClick={loadMatches}
+              className="mt-4 px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200"
+            >
+              Try Again
+            </button>
           </div>
         )}
 
@@ -211,7 +219,7 @@ const LiveTV: React.FC = () => {
           <>
             {matches.length === 0 ? (
               <div className="text-center py-20">
-                <Zap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <Radio className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600 dark:text-gray-300 text-lg">
                   {t.live_tv_no_matches}
                 </p>
@@ -223,6 +231,17 @@ const LiveTV: React.FC = () => {
                     key={match.id}
                     className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-pink-200/50 dark:border-gray-700/50 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
                   >
+                    {/* Match Poster/Image */}
+                    {match.poster && (
+                      <div className="aspect-video overflow-hidden">
+                        <img
+                          src={liveTVService.getImageUrl(match.poster, 'poster')}
+                          alt={match.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
+
                     {/* Match Header */}
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-4">
@@ -284,10 +303,16 @@ const LiveTV: React.FC = () => {
                       {/* Watch Button */}
                       <button
                         onClick={() => handleWatchMatch(match)}
-                        className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                        disabled={!match.sources || match.sources.length === 0}
+                        className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Play className="w-5 h-5" />
-                        <span>{t.live_tv_watch_live}</span>
+                        <span>
+                          {!match.sources || match.sources.length === 0 
+                            ? 'No Streams Available' 
+                            : t.live_tv_watch_live
+                          }
+                        </span>
                       </button>
                     </div>
                   </div>
@@ -299,7 +324,9 @@ const LiveTV: React.FC = () => {
 
         {/* Stream Selection Modal */}
         {selectedMatch && streams.length > 0 && !isPlaying && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedMatch(null);
+          }}>
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
@@ -313,6 +340,15 @@ const LiveTV: React.FC = () => {
                 </button>
               </div>
 
+              {/* Match Info */}
+              <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
+                  {selectedMatch.title}
+                </h4>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  {selectedMatch.category} • {liveTVService.formatMatchTime(selectedMatch.date)}
+                </p>
+              </div>
               <div className="space-y-3 mb-6">
                 {streams.map((stream) => (
                   <button
@@ -325,6 +361,7 @@ const LiveTV: React.FC = () => {
                     }`}
                   >
                     <div className="flex items-center space-x-3">
+                      <Tv className="w-4 h-4 text-gray-500" />
                       <span className="font-medium text-gray-900 dark:text-white">
                         Stream {stream.streamNo}
                       </span>
@@ -352,6 +389,41 @@ const LiveTV: React.FC = () => {
               >
                 <Play className="w-5 h-5" />
                 <span>{t.live_tv_watch_live}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* No Streams Modal */}
+        {selectedMatch && streams.length === 0 && !isPlaying && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center px-4" onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedMatch(null);
+          }}>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full text-center">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  No Streams Available
+                </h3>
+                <button
+                  onClick={() => setSelectedMatch(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <Radio className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-300">
+                  No streams are currently available for this match.
+                </p>
+              </div>
+              
+              <button
+                onClick={() => setSelectedMatch(null)}
+                className="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-semibold transition-all duration-200"
+              >
+                Close
               </button>
             </div>
           </div>

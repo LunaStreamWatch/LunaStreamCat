@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Film, Archive, Home, Search, Compass, Heart, Tv, Zap, ChevronDown } from 'lucide-react';
+import { Film, Archive, Home, Search, Compass, Heart, Tv, Radio, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { languages, translations } from '../data/i18n';
 
@@ -33,8 +33,7 @@ const GlobalNavbar: React.FC = () => {
     { path: '/', label: t.nav_home, icon: Home },
     { path: '/search', label: t.nav_search, icon: Search },
     { path: '/discover', label: t.nav_discover, icon: Compass },
-    { path: '/live-tv', label: t.nav_live_tv, icon: Zap },
-    { path: '/anime', label: t.nav_anime, icon: Tv },
+    { path: '/live-tv', label: t.nav_live_tv, icon: Radio },
     // { path: '/soon', label: t.home_coming_soon, icon: Calendar }, // optional
     { path: '/vault', label: t.nav_vault, icon: Archive },
   ];
@@ -59,26 +58,25 @@ const GlobalNavbar: React.FC = () => {
       setOpen(false);
     };
 
+    const currentLanguage = languages.find(lang => lang.shortname === language);
     return (
       <div ref={ref} className="relative inline-block">
         <button
           onClick={() => setOpen(!open)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium cursor-pointer select-none
+          className="inline-flex items-center justify-center w-10 h-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 text-lg cursor-pointer select-none
             hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 shadow-sm border border-pink-200/50 dark:border-gray-600/30 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          title={`Language: ${currentLanguage?.name || 'Unknown'}`}
         >
-          <span className="text-lg">
-            {languages.find(lang => lang.shortname === language)?.flag}
-          </span>
-          <ChevronDown className={`h-3 w-3 text-gray-500 dark:text-gray-300 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+          {currentLanguage?.flag || '🌐'}
         </button>
 
         {open && (
           <ul
             role="listbox"
             tabIndex={-1}
-            className="absolute right-0 mt-2 w-32 rounded-xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-xl border border-pink-200/50 dark:border-gray-600/30 focus:outline-none
+            className="absolute right-0 mt-2 w-40 rounded-xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-xl border border-pink-200/50 dark:border-gray-600/30 focus:outline-none
               text-gray-900 dark:text-gray-100 text-sm origin-top-right z-50 overflow-hidden"
           >
             {languages.map(({ name, shortname, flag }) => (
@@ -92,7 +90,7 @@ const GlobalNavbar: React.FC = () => {
                 }`}
               >
                 <span className="text-base">{flag}</span>
-                <span className="text-xs font-medium">{shortname.toUpperCase()}</span>
+                <span className="text-sm font-medium">{name}</span>
               </li>
             ))}
           </ul>

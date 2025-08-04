@@ -5,6 +5,7 @@ import { Search, TrendingUp } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router-dom"
 
 import { tmdb } from "../services/tmdb"
+import { anilistService } from "../services/anilist"
 import type { Movie, TVShow } from "../types"
 import GlobalNavbar from "./GlobalNavbar"
 import { filterBannedContent } from "../utils/banList"
@@ -18,6 +19,7 @@ const HomePage: React.FC = () => {
   const [suggestions, setSuggestions] = useState<(Movie | (TVShow & { media_type: "movie" | "tv" }))[]>([])
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([])
   const [trendingTV, setTrendingTV] = useState<TVShow[]>([])
+  const [trendingAnime, setTrendingAnime] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const [showAllFaves, setShowAllFaves] = React.useState(false)
@@ -103,9 +105,14 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const [moviesData, tvData] = await Promise.all([tmdb.getTrendingMovies(), tmdb.getTrendingTV()])
+        const [moviesData, tvData, animeData] = await Promise.all([
+          tmdb.getTrendingMovies(), 
+          tmdb.getTrendingTV(),
+          anilistService.getTrendingAnime(1, 12)
+        ])
         setTrendingMovies(moviesData.results?.slice(0, 12) || [])
         setTrendingTV(tvData.results?.slice(0, 12) || [])
+        setTrendingAnime(animeData.data?.Page?.media?.slice(0, 12) || [])
       } catch (error) {
         console.error(t.home_trending_fetch_error, error)
       } finally {
@@ -157,7 +164,11 @@ const HomePage: React.FC = () => {
                       setQuery(value)
                       if (value.trim().length > 1) {
                         try {
-                          const [movieRes, tvRes] = await Promise.all([tmdb.searchMovies(value), tmdb.searchTV(value)])
+                          const [movieRes, tvRes, animeRes] = await Promise.all([
+                            tmdb.searchMovies(value), 
+                            tmdb.searchTV(value),
+                            anilistService.searchAnime(value, 1, 3)
+                          ])
                           const movieResults = (movieRes.results || []).map((item) => ({
                             ...item,
                             media_type: "movie",
@@ -183,10 +194,23 @@ const HomePage: React.FC = () => {
                             }),
                           )
 
+                          // Add anime results
+                          const animeResults = (animeRes.data?.Page?.media || []).map((anime) => ({
+                            id: anime.id,
+                            title: anilistService.getTitle(anime),
+                            name: anilistService.getTitle(anime),
+                            poster_path: anime.coverImage.large,
+                            vote_average: anime.averageScore ? anime.averageScore / 10 : 0,
+                            popularity: anime.popularity || 0,
+                            overview: anime.description?.replace(/<[^>]*>/g, '').slice(0, 200) + '...' || '',
+                            media_type: "anime",
+                            release_date: anime.seasonYear?.toString() || '',
+                            first_air_date: anime.seasonYear?.toString() || '',
+                          }))
                           // Filter banned content from suggestions
                           const filteredMovies = filterBannedContent(movieResults);
                           const filteredTV = filterBannedContent(tvResults);
-                          const combined = [...filteredMovies, ...filteredTV]
+                          const combined = [...filteredMovies, ...filteredTV, ...animeResults]
                             .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
                             .slice(0, 6)
                           setSuggestions(combined)
@@ -213,6 +237,7 @@ const HomePage: React.FC = () => {
                   <div className="absolute z-50 mt-2 w-full bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 max-h-96 overflow-auto">
                     {suggestions.map((item) => {
                       const isMovie = item.media_type === "movie"
+                      const isAnime = item.media_type === "anime"
                       const title = isMovie ? item.title : item.name
                       const releaseDate = isMovie ? item.release_date : item.first_air_date
                       const year = releaseDate ? new Date(releaseDate).getFullYear() : t.content_n_a
@@ -220,13 +245,13 @@ const HomePage: React.FC = () => {
                       return (
                         <div
                           key={`${item.title || item.name}-${item.id}`}
-                          onClick={() => navigate(`/${item.media_type}/${item.id}`)}
+                          onClick={() => navigate(`/${isAnime ? 'anime' : item.media_type}/${item.id}`)}
                           className="flex items-center p-4 hover:bg-pink-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200 border-b border-gray-100 dark:border-gray-700/30 last:border-b-0"
                         >
                           {/* Poster Image */}
                           <div className="flex-shrink-0 w-12 h-16 mr-4 rounded-lg overflow-hidden shadow-md">
                             <img
-                              src={tmdb.getImageUrl(item.poster_path, "w92") || "/placeholder.svg"}
+                              src={isAnime ? item.poster_path : tmdb.getImageUrl(item.poster_path, "w92") || "/placeholder.svg"}
                               alt={title}
                               className="w-full h-full object-cover"
                               loading="lazy"
@@ -250,12 +275,14 @@ const HomePage: React.FC = () => {
                                   </div>
                                   <span
                                     className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                                      isMovie
+                                      isAnime
+                                        ? "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300"
+                                        : isMovie
                                         ? "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300"
                                         : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
                                     }`}
                                   >
-                                    {isMovie ? t.content_movie_singular : t.content_tv_singular}
+                                    {isAnime ? t.content_anime_singular : isMovie ? t.content_movie_singular : t.content_tv_singular}
                                   </span>
                                 </div>
 
@@ -353,7 +380,7 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Trending TV Shows */}
-            <div>
+            <div className="mb-12">
               <h2 className="flex items-center mb-8 text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">
                 <TrendingUp className="w-8 h-8 mr-3 text-purple-500" />
                 {t.content_trending} {t.content_tv_plural}
@@ -381,6 +408,43 @@ const HomePage: React.FC = () => {
                         <div className="flex items-center">
                           <span className="text-yellow-500">★</span>
                           <span className="ml-1">{show.vote_average.toFixed(1)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Trending Anime */}
+            <div>
+              <h2 className="flex items-center mb-8 text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">
+                <TrendingUp className="w-8 h-8 mr-3 text-orange-500" />
+                {t.content_trending} {t.content_anime_plural}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {trendingAnime.map((anime) => (
+                  <Link
+                    key={anime.id}
+                    to={`/anime/${anime.id}`}
+                    className="group block bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl shadow-lg border border-orange-200/50 dark:border-gray-700/50 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                  >
+                    <div className="aspect-[2/3] overflow-hidden">
+                      <img
+                        src={anilistService.getImageUrl(anime) || "/placeholder.svg"}
+                        alt={anilistService.getTitle(anime)}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-2 line-clamp-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                        {anilistService.getTitle(anime)}
+                      </h3>
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                        <span>{anime.seasonYear || t.content_n_a}</span>
+                        <div className="flex items-center">
+                          <span className="text-yellow-500">★</span>
+                          <span className="ml-1">{anime.averageScore ? (anime.averageScore / 10).toFixed(1) : t.content_n_a}</span>
                         </div>
                       </div>
                     </div>

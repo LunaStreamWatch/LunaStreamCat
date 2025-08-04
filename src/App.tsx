@@ -18,7 +18,6 @@ import Vault from './components/Vault'
 import ComingSoon from './components/ComingSoon';
 import Footer from './components/Footer';
 import LiveTV from './components/LiveTV';
-import Anime from './components/Anime';
 import AnimeDetail from './components/AnimeDetail';
 import { LanguageProvider } from './components/LanguageContext';
 
@@ -82,7 +81,6 @@ function App() {
           <Route path="/discover" element={<Discover />} />
           <Route path="/vault" element={<Vault />} />
           <Route path="/live-tv" element={<LiveTV />} />
-          <Route path="/anime" element={<Anime />} />
           <Route path="/anime/:id" element={<AnimeDetail />} />
           <Route path="/watchlist" element={<Watchlist />} /> {/* Redirects to /vault */}
           <Route path="*" element={<NotFoundPage />} />

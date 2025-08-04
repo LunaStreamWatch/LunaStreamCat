@@ -1,6 +1,10 @@
 export const languages = [
   { name: 'English', shortname: 'en', flag: '🇺🇸' },
   { name: 'Dansk', shortname: 'dk', flag: '🇩🇰' },
+  { name: 'Español', shortname: 'es', flag: '🇪🇸' },
+  { name: 'Français', shortname: 'fr', flag: '🇫🇷' },
+  { name: 'Deutsch', shortname: 'de', flag: '🇩🇪' },
+  { name: '日本語', shortname: 'ja', flag: '🇯🇵' },
 ];
 
 export const translations = {
@@ -298,6 +302,53 @@ export const translations = {
     anime_dub: 'Dub',
     anime_movie: 'Movie',
     anime_series: 'Series',
+    
+    // Theme toggle
+    switch_to_light_mode: 'Switch to light mode',
+    switch_to_dark_mode: 'Switch to dark mode',
+    
+    // Player
+    close_player: 'Close Player',
+    toggle_favorite: 'Toggle Favorite',
+    action_watch_movie: 'Watch Movie',
+    show_episode_info: 'Show episode info',
+    
+    // Cast
+    cast_overview: 'Cast Overview',
+    status_loading_cast: 'Loading cast...',
+    status_no_cast_info: 'No cast information available.',
+    status_loading_episodes: 'Loading episodes...',
+    
+    // Misc
+    minutes: 'minutes',
+    boop_the_frog: 'Boop the frog',
+    boops: 'Boops',
+    scroll_to_top: 'Scroll to top',
+    
+    // Search
+    search_loading: 'Searching...',
+    search_fail: 'Search failed',
+    search_content: 'Search Content',
+    no_poster: 'No Poster',
+    pagination_label: 'Pagination',
+    pagination_prev: 'Previous',
+    pagination_next: 'Next',
+    
+    // Vault
+    vault_watchlist_empty: 'Your watchlist is empty',
+    vault_no_watchlist_match: 'No watchlist items match',
+    vault_start_adding_watchlist: 'Start watching movies and shows to build your watchlist.',
+    keep_building: 'Keep Building Your Vault!',
+    keep_building_sub: 'Discover new content and continue growing your personal collection.',
+    favorite: 'Favorite',
+    
+    // Last Updated
+    last_updated_title: 'Page Last Updated',
+    last_updated_message: 'This page was last updated on:',
+    
+    // Coming Soon
+    coming_soon_title: 'Coming Soon',
+    coming_soon_search_placeholder: 'Search by title or name...',
   },
   
   dk: {
@@ -595,6 +646,53 @@ export const translations = {
     anime_dub: 'Dub',
     anime_movie: 'Film',
     anime_series: 'Serie',
+    
+    // Theme toggle
+    switch_to_light_mode: 'Skift til lys tilstand',
+    switch_to_dark_mode: 'Skift til mørk tilstand',
+    
+    // Player
+    close_player: 'Luk afspiller',
+    toggle_favorite: 'Skift favorit',
+    action_watch_movie: 'Se film',
+    show_episode_info: 'Vis episodeinfo',
+    
+    // Cast
+    cast_overview: 'Rollebesætning',
+    status_loading_cast: 'Indlæser rollebesætning...',
+    status_no_cast_info: 'Ingen rollebesætningsinfo tilgængelig.',
+    status_loading_episodes: 'Indlæser episoder...',
+    
+    // Misc
+    minutes: 'minutter',
+    boop_the_frog: 'Boop frøen',
+    boops: 'Boops',
+    scroll_to_top: 'Rul til toppen',
+    
+    // Search
+    search_loading: 'Søger...',
+    search_fail: 'Søgning mislykkedes',
+    search_content: 'Søg indhold',
+    no_poster: 'Ingen plakat',
+    pagination_label: 'Sideinddeling',
+    pagination_prev: 'Forrige',
+    pagination_next: 'Næste',
+    
+    // Vault
+    vault_watchlist_empty: 'Din watchlist er tom',
+    vault_no_watchlist_match: 'Ingen watchlist-elementer matcher',
+    vault_start_adding_watchlist: 'Begynd at se film og serier for at opbygge din watchlist.',
+    keep_building: 'Fortsæt med at opbygge dit arkiv!',
+    keep_building_sub: 'Udforsk nyt indhold og fortsæt med at udvide din personlige samling.',
+    favorite: 'Favorit',
+    
+    // Last Updated
+    last_updated_title: 'Side sidst opdateret',
+    last_updated_message: 'Denne side blev sidst opdateret den:',
+    
+    // Coming Soon
+    coming_soon_title: 'Kommer snart',
+    coming_soon_search_placeholder: 'Søg efter titel eller navn...',
   },
 };
 
