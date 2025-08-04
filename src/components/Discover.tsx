@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, ArrowRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronsLeft, ChevronsRight, ChevronDown } from 'lucide-react';
 import { tmdb } from '../services/tmdb';
 import { Link } from 'react-router-dom';
 import GlobalNavbar from './GlobalNavbar';
@@ -291,43 +291,52 @@ const Discover: React.FC = () => {
 
         {/* Filters */}
         <div className="flex flex-wrap justify-center gap-6 mb-12">
-          <select
-            onChange={handleMediaTypeChange}
-            value={mediaType}
-            className="px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
-          >
-            <option value="movie">{t.movies}</option>
-            <option value="tv">{t.tvs}</option>
-            <option value="all">{t.filter_all}</option>
-          </select>
+          <div className="relative">
+            <select
+              onChange={handleMediaTypeChange}
+              value={mediaType}
+              className="px-4 py-2 pr-8 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
+            >
+              <option value="movie">{t.movies}</option>
+              <option value="tv">{t.tvs}</option>
+              <option value="all">{t.filter_all}</option>
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          </div>
 
           {mediaType !== 'all' && (
-            <select
-              onChange={handleGenreChange}
-              value={selectedGenre}
-              className="px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
-            >
-              <option value="">{t.filter_all} {t.content_genre_plural}</option>
-              {genres.map(genre => (
-                <option key={genre.id} value={genre.id}>
-                  {genre.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                onChange={handleGenreChange}
+                value={selectedGenre}
+                className="px-4 py-2 pr-8 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
+              >
+                <option value="">{t.filter_all} {t.content_genre_plural}</option>
+                {genres.map(genre => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            </div>
           )}
 
-          <select
-            onChange={handleSortByChange}
-            value={sortBy}
-            className="px-4 py-2 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
-          >
-            <option value="popularity.desc">{t.filter_popularity} ({t.filter_descending_short})</option>
-            <option value="popularity.asc">{t.filter_popularity} ({t.filter_ascending_short})</option>
-            <option value="vote_average.desc">{t.filter_popularity} ({t.filter_descending_short})</option>
-            <option value="vote_average.asc">{t.filter_rating} ({t.filter_ascending_short})</option>
-            <option value="release_date.desc">{t.filter_release_date} ({t.filter_newest})</option>
-            <option value="release_date.asc">{t.filter_release_date} ({t.filter_oldest})</option>
-          </select>
+          <div className="relative">
+            <select
+              onChange={handleSortByChange}
+              value={sortBy}
+              className="px-4 py-2 pr-8 rounded-lg border dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white appearance-none"
+            >
+              <option value="popularity.desc">{t.filter_popularity} ({t.filter_descending_short})</option>
+              <option value="popularity.asc">{t.filter_popularity} ({t.filter_ascending_short})</option>
+              <option value="vote_average.desc">{t.filter_popularity} ({t.filter_descending_short})</option>
+              <option value="vote_average.asc">{t.filter_rating} ({t.filter_ascending_short})</option>
+              <option value="release_date.desc">{t.filter_release_date} ({t.filter_newest})</option>
+              <option value="release_date.asc">{t.filter_release_date} ({t.filter_oldest})</option>
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
         {/* Results */}

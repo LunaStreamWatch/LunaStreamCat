@@ -23,6 +23,19 @@ export const playerConfigs: PlayerConfig[] = [
       }
     },
   },
+  {
+    id: "videasy-anime",
+    name: "Videasy Anime",
+    generateUrl: ({ tmdbId, seasonNumber, episodeNumber, mediaType }) => {
+      // For anime, we'll use anilist ID instead of TMDB ID
+      // This is a placeholder - you'll need to implement anilist ID mapping
+      if (mediaType === "movie") {
+        return `https://player.videasy.net/anime/${tmdbId}?color=${THEME_COLOR}&dub=false`
+      } else {
+        return `https://player.videasy.net/anime/${tmdbId}/${episodeNumber}?color=${THEME_COLOR}&dub=false`
+      }
+    },
+  },
   /*
   {
     id: "vidlink",

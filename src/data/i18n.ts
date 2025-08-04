@@ -1,5 +1,5 @@
 export const languages = [
-  { name: 'English', shortname: 'en', flag: '🇬🇧' },
+  { name: 'English', shortname: 'en', flag: '🇺🇸' },
   { name: 'Dansk', shortname: 'dk', flag: '🇩🇰' },
 ];
 
@@ -17,6 +17,8 @@ export const translations = {
     nav_donate: 'Donate',
     nav_language: 'Language',
     nav_theme: 'Theme',
+    nav_live_tv: 'Live TV',
+    nav_anime: 'Anime',
     
     // generic
     season: "Season",
@@ -55,6 +57,15 @@ export const translations = {
     content_episodes: 'Episodes:',
     content_tba: 'TBA',
     content_breakdown: 'Content Breakdown',
+    content_anime_singular: 'Anime',
+    content_anime_plural: 'Anime',
+    content_live_tv: 'Live TV',
+    content_sports: 'Sports',
+    content_match: 'Match',
+    content_matches: 'Matches',
+    content_live: 'Live',
+    content_upcoming: 'Upcoming',
+    content_today: 'Today',
     
     // Filtering and sorting
     filter_show_results: 'Showing',
@@ -266,6 +277,27 @@ export const translations = {
     footer_follow_tiktok: 'Follow us on TikTok',
     footer_follow_twitter: 'Follow us on Twitter',
     footer_join_telegram: 'Join our Telegram',
+    
+    // Live TV
+    live_tv_title: 'Live Sports',
+    live_tv_subtitle: 'Watch live sports matches and events',
+    live_tv_no_matches: 'No live matches available',
+    live_tv_loading: 'Loading matches...',
+    live_tv_watch_live: 'Watch Live',
+    live_tv_vs: 'vs',
+    live_tv_select_stream: 'Select Stream',
+    live_tv_hd: 'HD',
+    live_tv_sd: 'SD',
+    
+    // Anime
+    anime_title: 'Anime',
+    anime_subtitle: 'Discover and watch anime series and movies',
+    anime_episode: 'Episode',
+    anime_episodes: 'Episodes',
+    anime_sub: 'Sub',
+    anime_dub: 'Dub',
+    anime_movie: 'Movie',
+    anime_series: 'Series',
   },
   
   dk: {
@@ -282,6 +314,8 @@ export const translations = {
     nav_donate: 'Doner',
     nav_language: 'Sprog',
     nav_theme: 'Tema',
+    nav_live_tv: 'Live TV',
+    nav_anime: 'Anime',
     
     // generic
     season: 'Sæson',
@@ -320,6 +354,15 @@ export const translations = {
     content_episodes: 'Episoder:',
     content_tba: 'TBA',
     content_breakdown: 'Indholdsoversigt',
+    content_anime_singular: 'Anime',
+    content_anime_plural: 'Anime',
+    content_live_tv: 'Live TV',
+    content_sports: 'Sport',
+    content_match: 'Kamp',
+    content_matches: 'Kampe',
+    content_live: 'Live',
+    content_upcoming: 'Kommende',
+    content_today: 'I dag',
     
     // Filtering and sorting
     filter_show_results: 'Viser',
@@ -531,6 +574,27 @@ export const translations = {
     footer_follow_tiktok: 'Følg os på TikTok',
     footer_follow_twitter: 'Følg os på Twitter',
     footer_join_telegram: 'Tilslut dig vores Telegram',
+    
+    // Live TV
+    live_tv_title: 'Live Sport',
+    live_tv_subtitle: 'Se live sportkampe og begivenheder',
+    live_tv_no_matches: 'Ingen live kampe tilgængelige',
+    live_tv_loading: 'Indlæser kampe...',
+    live_tv_watch_live: 'Se Live',
+    live_tv_vs: 'mod',
+    live_tv_select_stream: 'Vælg Stream',
+    live_tv_hd: 'HD',
+    live_tv_sd: 'SD',
+    
+    // Anime
+    anime_title: 'Anime',
+    anime_subtitle: 'Udforsk og se anime-serier og film',
+    anime_episode: 'Episode',
+    anime_episodes: 'Episoder',
+    anime_sub: 'Sub',
+    anime_dub: 'Dub',
+    anime_movie: 'Film',
+    anime_series: 'Serie',
   },
 };
 

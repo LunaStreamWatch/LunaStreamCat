@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Film, Archive, Home, Search, Compass, Heart } from 'lucide-react';
+import { Film, Archive, Home, Search, Compass, Heart, Tv, Zap, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { languages, translations } from '../data/i18n';
 
@@ -33,11 +33,13 @@ const GlobalNavbar: React.FC = () => {
     { path: '/', label: t.nav_home, icon: Home },
     { path: '/search', label: t.nav_search, icon: Search },
     { path: '/discover', label: t.nav_discover, icon: Compass },
+    { path: '/live-tv', label: t.nav_live_tv, icon: Zap },
+    { path: '/anime', label: t.nav_anime, icon: Tv },
     // { path: '/soon', label: t.home_coming_soon, icon: Calendar }, // optional
     { path: '/vault', label: t.nav_vault, icon: Archive },
   ];
 
-  // Custom Language Selector component (inside same file)
+  // Improved Language Selector component with flags
   const LanguageSelectorCustom = () => {
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
@@ -58,33 +60,26 @@ const GlobalNavbar: React.FC = () => {
     };
 
     return (
-      <div ref={ref} className="relative inline-block max-w-[100px]">
+      <div ref={ref} className="relative inline-block">
         <button
           onClick={() => setOpen(!open)}
           aria-haspopup="listbox"
           aria-expanded={open}
-          className="inline-flex items-center justify-between w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-gray-100 text-xl font-semibold cursor-pointer select-none
-            hover:bg-gray-200 dark:hover:bg-gray-700 transition-shadow shadow-sm dark:shadow-none focus:outline-none focus:ring-2 focus:ring-pink-500"
+          className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl text-gray-900 dark:text-gray-100 text-sm font-medium cursor-pointer select-none
+            hover:bg-white dark:hover:bg-gray-700 transition-all duration-200 shadow-sm border border-pink-200/50 dark:border-gray-600/30 focus:outline-none focus:ring-2 focus:ring-pink-500"
         >
-          {language.toUpperCase()}
-          <svg
-            className={`ml-2 h-5 w-5 text-gray-500 dark:text-gray-300 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
+          <span className="text-lg">
+            {languages.find(lang => lang.shortname === language)?.flag}
+          </span>
+          <ChevronDown className={`h-3 w-3 text-gray-500 dark:text-gray-300 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
         </button>
 
         {open && (
           <ul
             role="listbox"
             tabIndex={-1}
-            className="absolute right-0 mt-2 w-full rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
-              text-gray-900 dark:text-gray-100 text-sm origin-top-right"
-            style={{ transformOrigin: 'top right', transform: 'scale(0.9)', transition: 'transform 0.15s ease' }}
+            className="absolute right-0 mt-2 w-32 rounded-xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-xl border border-pink-200/50 dark:border-gray-600/30 focus:outline-none
+              text-gray-900 dark:text-gray-100 text-sm origin-top-right z-50 overflow-hidden"
           >
             {languages.map(({ name, shortname, flag }) => (
               <li
@@ -92,11 +87,12 @@ const GlobalNavbar: React.FC = () => {
                 role="option"
                 aria-selected={language === shortname}
                 onClick={() => handleSelect(shortname)}
-                className={`cursor-pointer px-4 py-2 hover:bg-pink-500 hover:text-white ${
-                  language === shortname ? 'bg-pink-500 text-white' : ''
+                className={`cursor-pointer px-3 py-2 flex items-center gap-2 hover:bg-pink-500 hover:text-white transition-colors duration-200 ${
+                  language === shortname ? 'bg-pink-500 text-white' : 'hover:bg-pink-50 dark:hover:bg-gray-700'
                 }`}
               >
-                {name}
+                <span className="text-base">{flag}</span>
+                <span className="text-xs font-medium">{shortname.toUpperCase()}</span>
               </li>
             ))}
           </ul>

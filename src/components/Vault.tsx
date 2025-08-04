@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Film, Search, Trash2, Play, Calendar, Star, ArrowLeft, Heart, Archive, TrendingUp, Users, BarChart3, Clock, Target, Award } from 'lucide-react';
+import { Film, Search, Trash2, Play, Calendar, Star, ArrowLeft, Heart, Archive, TrendingUp, Users, BarChart3, Clock, Target, Award, ChevronDown } from 'lucide-react';
 import { watchlistService, WatchlistMovie, WatchlistTVShow } from '../services/watchlist';
 import { tmdb } from '../services/tmdb';
 import GlobalNavbar from './GlobalNavbar';
@@ -193,17 +193,18 @@ const Vault: React.FC = () => {
                   id="category"
                   value={categoryFilter || ''}
                   onChange={(e) => setCategoryFilter(e.target.value || null)}
-                  className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl border border-pink-200/50 dark:border-gray-600/30 text-gray-900 dark:text-gray-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 appearance-none"
+                  className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md rounded-xl border border-pink-200/50 dark:border-gray-600/30 text-gray-900 dark:text-gray-100 px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 appearance-none relative"
                 >
                   <option value="">{t.filter_all}</option>
                   <option value="Movie">{t.movies}</option>
                   <option value="TV Show">{t.content_tv_plural}</option>
                 </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
 
               {/* Search Input */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-600 dark:text-gray-400" />
                 <input
                   type="text"
                   placeholder={`${t.vault_search_placeholder}...`}
