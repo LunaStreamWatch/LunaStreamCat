@@ -355,13 +355,13 @@ const SearchResults: React.FC = () => {
                   {item.poster_path ? (
                     <img
                       loading="lazy"
-                      src={isAnime(item) ? item.poster_path : `https://image.tmdb.org/t/p/w342${item.poster_path}`}
+                      src={anilistService.isAnime(item) ? item.poster_path : `https://image.tmdb.org/t/p/w342${item.poster_path}`}
                       alt={getTitle(item)}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
                     <div className={`flex items-center justify-center w-full h-full text-xs uppercase font-semibold ${
-                      isAnime(item) 
+                      anilistService.isAnime(item) 
                         ? 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300'
                         : 'bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300'
                     }`}>
@@ -384,7 +384,7 @@ const SearchResults: React.FC = () => {
                     </span>
                     <span className="flex items-center">
                       <Film className="w-3.5 h-3.5 mr-1" />
-                      {isAnime(item) ? 'ANIME' : item.media_type.toUpperCase()}
+                      {anilistService.isAnime(item) ? 'ANIME' : item.media_type.toUpperCase()}
                     </span>
                   </div>
                 </div>

@@ -33,7 +33,7 @@ const GlobalNavbar: React.FC = () => {
     { path: '/', label: t.nav_home, icon: Home },
     { path: '/search', label: t.nav_search, icon: Search },
     { path: '/discover', label: t.nav_discover, icon: Compass },
-    { path: '/live-tv', label: t.nav_live_tv, icon: Radio },
+    // { path: '/live-tv', label: t.nav_live_tv, icon: Radio },
     // { path: '/soon', label: t.home_coming_soon, icon: Calendar }, // optional
     { path: '/vault', label: t.nav_vault, icon: Archive },
   ];

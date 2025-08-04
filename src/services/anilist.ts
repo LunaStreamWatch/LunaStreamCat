@@ -277,6 +277,48 @@ class AnilistService {
         return format;
     }
   }
+
+  /**
+   * Determines if a media item is anime content
+   * @param item - Media item to check
+   * @returns boolean indicating if the item is anime
+   */
+  isAnime(item: any): boolean {
+    // Check if item has media_type property
+    if (!item) return false;
+    
+    // Check media_type directly
+    if (item.media_type === 'anime') return true;
+    
+    // Check if it's from Anilist (has Anilist-specific properties)
+    if (item.id && item.title && item.coverImage) return true;
+    
+    // Check if it's from TMDB but marked as anime
+    if (item.genres && Array.isArray(item.genres)) {
+      const animeGenres = ['anime', 'animation', 'japanese'];
+      const hasAnimeGenre = item.genres.some((genre: string) => 
+        animeGenres.includes(genre.toLowerCase())
+      );
+      if (hasAnimeGenre) return true;
+    }
+    
+    // Check origin country for Japanese content
+    if (item.origin_country && Array.isArray(item.origin_country)) {
+      return item.origin_country.includes('JP');
+    }
+    
+    // Check original language
+    if (item.original_language === 'ja') return true;
+    
+    // Check for anime-specific keywords in title or overview
+    const title = (item.title || item.name || '').toLowerCase();
+    const overview = (item.overview || '').toLowerCase();
+    const animeKeywords = ['anime', 'manga', 'japanese animation', 'anime series'];
+    
+    return animeKeywords.some(keyword => 
+      title.includes(keyword) || overview.includes(keyword)
+    );
+  }
 }
 
 export const anilistService = new AnilistService();

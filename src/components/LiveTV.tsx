@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useREf } from 'react';
 import { Play, Calendar, Clock, Users, Radio, X, ChevronDown, Tv } from 'lucide-react';
 import { liveTVService, Match, Stream, Sport } from '../services/liveTV';
 import GlobalNavbar from './GlobalNavbar';
 import { useLanguage } from './LanguageContext';
 import { translations } from '../data/i18n';
+import StreamPlayer from './LiveStreamPlayer';
 
 const LiveTV: React.FC = () => {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -16,6 +17,7 @@ const LiveTV: React.FC = () => {
   const [streams, setStreams] = useState<Stream[]>([]);
   const [selectedStream, setSelectedStream] = useState<Stream | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showIframe, setShowIframe] = useState(false);
 
   const { language } = useLanguage();
   const t = translations[language] || translations.en;
@@ -117,15 +119,9 @@ const LiveTV: React.FC = () => {
           </button>
         </div>
 
-        <iframe
-          src={selectedStream.embedUrl}
-          className="fixed top-0 left-0 w-full h-full border-0"
-          allowFullScreen
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-          title={selectedMatch?.title || 'Live Stream'}
-          referrerPolicy="no-referrer"
-          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
-        />
+        <StreamPlayer selectedMatch={selectedMatch} selectedStream={selectedStream}/>
+
+
       </div>
     );
   }
@@ -148,13 +144,14 @@ const LiveTV: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
           {/* Sport Filter */}
           <div className="relative">
             <select
               value={selectedSport}
               onChange={(e) => setSelectedSport(e.target.value)}
-              className="px-4 py-2 pr-8 rounded-xl border border-pink-200/50 dark:border-gray-600/30 bg-white/95 dark:bg-gray-800/95 text-gray-900 dark:text-gray-100 appearance-none focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="h-11 px-4 pr-8 rounded-xl border border-pink-200/50 dark:border-gray-600/30 bg-white/95 dark:bg-gray-800/95 text-gray-900 dark:text-gray-100 appearance-none focus:outline-none focus:ring-2 focus:ring-pink-500"
+              style={{ appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none' }}
             >
               <option value="">{t.filter_all} {t.content_sports}</option>
               {sports.map(sport => (
@@ -163,15 +160,14 @@ const LiveTV: React.FC = () => {
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
           </div>
 
           {/* Tab Filter */}
-          <div className="flex bg-white/95 dark:bg-gray-800/95 rounded-xl border border-pink-200/50 dark:border-gray-600/30 p-1">
+          <div className="flex h-11 items-center bg-white/95 dark:bg-gray-800/95 rounded-xl border border-pink-200/50 dark:border-gray-600/30 p-1">
             {[
               { id: 'live', label: t.content_live, icon: Radio },
               { id: 'today', label: t.content_today, icon: Calendar },
-              { id: 'popular', label: 'Popular', icon: Users },
+              { id: 'popular', label: t.popular, icon: Users },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
@@ -191,6 +187,7 @@ const LiveTV: React.FC = () => {
             })}
           </div>
         </div>
+
 
         {/* Loading State */}
         {loading && (

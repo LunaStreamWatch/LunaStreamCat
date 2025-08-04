@@ -20,6 +20,7 @@ import Footer from './components/Footer';
 import LiveTV from './components/LiveTV';
 import AnimeDetail from './components/AnimeDetail';
 import { LanguageProvider } from './components/LanguageContext';
+import AnimeSearchResults from './components/AnimeSearchResults';
 
 function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
@@ -62,6 +63,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/anime" element={<AnimeSearchResults />} />
           <Route path="/movie/:id" element={<MovieDetail />} />
           <Route path="/tv/:id" element={<TVDetail />} />
           <Route path="/v" element={<VersionPage />} />
@@ -80,7 +82,7 @@ function App() {
           <Route path="/soon" element={<ComingSoon />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/vault" element={<Vault />} />
-          <Route path="/live-tv" element={<LiveTV />} />
+          {/*<Route path="/live-tv" element={<LiveTV />} />*/}
           <Route path="/anime/:id" element={<AnimeDetail />} />
           <Route path="/watchlist" element={<Watchlist />} /> {/* Redirects to /vault */}
           <Route path="*" element={<NotFoundPage />} />

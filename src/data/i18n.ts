@@ -1,14 +1,15 @@
 export const languages = [
   { name: 'English', shortname: 'en', flag: '🇺🇸' },
   { name: 'Dansk', shortname: 'dk', flag: '🇩🇰' },
-  { name: 'Español', shortname: 'es', flag: '🇪🇸' },
+  /*{ name: 'Español', shortname: 'es', flag: '🇪🇸' },
   { name: 'Français', shortname: 'fr', flag: '🇫🇷' },
   { name: 'Deutsch', shortname: 'de', flag: '🇩🇪' },
-  { name: '日本語', shortname: 'ja', flag: '🇯🇵' },
+  { name: '日本語', shortname: 'ja', flag: '🇯🇵' },*/
 ];
 
 export const translations = {
   en: {
+    popular: 'Popular',
     result: "result",
     results: "results",
     tv_not_found: 'Show not found',
@@ -637,6 +638,8 @@ export const translations = {
     live_tv_hd: 'HD',
     live_tv_sd: 'SD',
     
+    popular: 'Populære',
+
     // Anime
     anime_title: 'Anime',
     anime_subtitle: 'Udforsk og se anime-serier og film',
